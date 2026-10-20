@@ -212,6 +212,9 @@ func Test_getSrcFromControl(t *testing.T) {
 }
 
 func Test_listenConfig(t *testing.T) {
+	if runtime.Compiler == "tinygo" {
+		t.Skip("TinyGo net.ListenConfig.ListenPacket not implemented")
+	}
 	t.Run("IPv4", func(t *testing.T) {
 		conn, err := listenConfig().ListenPacket(context.Background(), "udp4", ":0")
 		if err != nil {

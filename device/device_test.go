@@ -150,6 +150,9 @@ func (pair *testPair) Send(tb testing.TB, ping SendDirection, done chan struct{}
 
 // genTestPair creates a testPair.
 func genTestPair(tb testing.TB, realSocket bool) (pair testPair) {
+	if realSocket && runtime.Compiler == "tinygo" {
+		tb.Skip("TinyGo net.ListenConfig.ListenPacket not implemented")
+	}
 	cfg, endpointCfg := genConfigs(tb)
 	var binds [2]conn.Bind
 	if realSocket {
@@ -393,6 +396,9 @@ func BenchmarkUAPIGet(b *testing.B) {
 }
 
 func goroutineLeakCheck(t *testing.T) {
+	if runtime.Compiler == "tinygo" {
+		return // TinyGo has no goroutine profile; count always reads 0.
+	}
 	goroutines := func() (int, []byte) {
 		p := pprof.Lookup("goroutine")
 		b := new(bytes.Buffer)
