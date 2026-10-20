@@ -3,12 +3,16 @@ package conn
 import (
 	"encoding/binary"
 	"net"
+	"runtime"
 	"testing"
 
 	"golang.org/x/net/ipv6"
 )
 
 func TestStdNetBindReceiveFuncAfterClose(t *testing.T) {
+	if runtime.Compiler == "tinygo" {
+		t.Skip("TinyGo net.ListenConfig.ListenPacket not implemented")
+	}
 	bind := NewStdNetBind().(*StdNetBind)
 	fns, _, err := bind.Open(0)
 	if err != nil {

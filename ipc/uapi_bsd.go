@@ -1,4 +1,4 @@
-//go:build darwin || freebsd || openbsd
+//go:build (darwin || freebsd || openbsd) && !tinygo
 
 /* SPDX-License-Identifier: MIT
  *
